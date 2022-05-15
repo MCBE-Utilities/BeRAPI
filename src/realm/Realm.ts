@@ -2,6 +2,9 @@
 import type { Client } from '../index'
 import type { IRealm, RealmState } from '../types'
 
+// Regular imports.
+import { Endpoints } from '../Constants'
+
 class Realm {
   protected readonly client: Client
   protected readonly IRealm: IRealm
@@ -49,6 +52,64 @@ class Realm {
    */
   public getState(): RealmState {
     return this.IRealm.state
+  }
+
+  /**
+   * Checks if the realm is expired.
+   * @returns Boolean.
+   */
+  public isExpired(): boolean {
+    return this.IRealm.expired
+  }
+
+  /**
+   * Closes the realm.
+   * @returns True or False.
+   */
+  public async close(): Promise<boolean> {
+    return new Promise((res, rej) => {
+      this.client.requests.createPutRequest(Endpoints.PUT.RealmClose(this.getRealmId()), (_result, error) => {
+        if (error) return rej(error)
+        
+        return res(true)
+      })
+    })
+  }
+
+  /**
+   * Opens the realm.
+   * @returns True or False.
+   */
+    public async open(): Promise<boolean> {
+      return new Promise((res, rej) => {
+        this.client.requests.createPutRequest(Endpoints.PUT.RealmOpen(this.getRealmId()), (_result, error) => {
+          if (error) return rej(error)
+          
+          return res(true)
+        })
+      })
+    }
+
+  /**
+   * Rename the realm.
+   * @param {string} name New name for the realm.
+   * @returns True or False.
+   */
+  public async rename(name: string): Promise<boolean> {
+    return new Promise((res, rej) => {
+      this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getRealmId()), {
+        description: {
+          name: name,
+        },
+        options: {
+          texturePacksRequired: true,
+        },
+      }, (_result, error) => {
+        if (error) return rej(error)
+          
+        return res(true)
+      })
+    })
   }
 }
 
