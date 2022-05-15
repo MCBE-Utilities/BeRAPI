@@ -4,6 +4,7 @@ import type { IRealm, RealmState, RealmJoinInfo, RealmAddress } from '../types'
 
 // Regular imports.
 import { Endpoints } from '../Constants'
+import { Player } from '../player'
 
 class Realm {
   protected readonly client: Client
@@ -135,10 +136,19 @@ class Realm {
     })
   }
 
+  /**
+   * Get the description of the realm.
+   * @returns Realm description.
+   */
   public getDescription(): string {
     return this.IRealm.motd
   }
 
+  /**
+   * Set the description of the realm.
+   * @param {string} description Realm description.
+   * @returns True or False.
+   */
   public async setDescription(description: string): Promise<boolean> {
     return new Promise((res) => {
       this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getId()), {
@@ -152,6 +162,21 @@ class Realm {
         if (error) return res(false)
           
         return res(true)
+      })
+    })
+  }
+
+  /**
+   * Get the players of the realm.
+   * @returns Array of players.
+   */
+  public async getPlayers(): Promise<Player[] | undefined> {
+    return new Promise((res) => {
+      this.client.requests.createGetRequest<IRealm>(Endpoints.GET.Realm(this.getId()), (result, error) => {
+        if (error) return res(undefined)
+        const players = result.players.map((x) => new Player(this.client, this, x))
+
+        return res(players)
       })
     })
   }

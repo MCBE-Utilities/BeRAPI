@@ -19,7 +19,7 @@ export interface IRealm {
   expiredTrial: boolean
   gracePeriod: boolean
   worldType: string
-  players: null
+  players: IPlayer[]
   maxPlayers: number
   minigameName: null
   minigameId: null
@@ -29,4 +29,13 @@ export interface IRealm {
   member: false
   clubId: string
   subscriptionRefreshStatus: null
+}
+
+export interface IPlayer {
+  uuid: string // Xuid
+  name: null
+  operator: boolean
+  accepted: boolean
+  online: boolean
+  permission: string
 }
