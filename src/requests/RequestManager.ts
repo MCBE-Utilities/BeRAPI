@@ -27,8 +27,7 @@ class RequestManager {
       headers: createHeader(this.client.getXsts(), this.client.getHash())
     }).then((result) => {
       return callback(result.data, false)
-    }).catch((er) => {
-      console.log(er)
+    }).catch(() => {
       return callback(undefined, true)
     })
   }

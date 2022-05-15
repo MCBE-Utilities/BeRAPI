@@ -1,6 +1,6 @@
 // Type imports.
 import type { Client } from '../index'
-import type { ServersJSON } from '../types'
+import type { IRealm, ServersJSON } from '../types'
 
 // Regular imports.
 import { Endpoints } from '../Constants'
@@ -35,7 +35,7 @@ class RealmManager {
    */
   public async getById(id: number): Promise<Realm | undefined> {
     const realms = await this.getAll()
-    const realm = realms.find((x) => x.getRealmId() === id)
+    const realm = realms.find((x) => x.getId() === id)
     if (!realm) return
 
     return realm
@@ -52,6 +52,22 @@ class RealmManager {
     if (!found) return
 
     return found
+  }
+
+  /**
+   * Geta a realm by it's invite code.
+   * @param {string} code Invite code.
+   * @returns Realm instance.
+   */
+  public getByInviteCode(code: string): Promise<Realm | undefined> {
+    return new Promise((res) => {
+      this.client.requests.createGetRequest<IRealm>(Endpoints.GET.RealmByInvite(code), (result, error) => {
+        if (error) return res(undefined)
+        const realm = new Realm(this.client, result)
+
+        return res(realm)
+      })
+    })
   }
 }
 

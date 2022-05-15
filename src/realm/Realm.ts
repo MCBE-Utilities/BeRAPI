@@ -26,7 +26,7 @@ class Realm {
    * Get the realm's id.
    * @returns Realm id.
    */
-  public getRealmId(): number {
+  public getId(): number {
     return this.IRealm.id
   }
 
@@ -67,9 +67,9 @@ class Realm {
    * @returns True or False.
    */
   public async close(): Promise<boolean> {
-    return new Promise((res, rej) => {
-      this.client.requests.createPutRequest(Endpoints.PUT.RealmClose(this.getRealmId()), (_result, error) => {
-        if (error) return rej(error)
+    return new Promise((res) => {
+      this.client.requests.createPutRequest(Endpoints.PUT.RealmClose(this.getId()), (_result, error) => {
+        if (error) return res(false)
         
         return res(true)
       })
@@ -81,23 +81,27 @@ class Realm {
    * @returns True or False.
    */
     public async open(): Promise<boolean> {
-      return new Promise((res, rej) => {
-        this.client.requests.createPutRequest(Endpoints.PUT.RealmOpen(this.getRealmId()), (_result, error) => {
-          if (error) return rej(error)
+      return new Promise((res) => {
+        this.client.requests.createPutRequest(Endpoints.PUT.RealmOpen(this.getId()), (_result, error) => {
+          if (error) return res(false)
           
           return res(true)
         })
       })
     }
 
+  public getName(): string {
+    return this.IRealm.name
+  }
+
   /**
-   * Rename the realm.
+   * Set the name of the realm.
    * @param {string} name New name for the realm.
    * @returns True or False.
    */
-  public async rename(name: string): Promise<boolean> {
-    return new Promise((res, rej) => {
-      this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getRealmId()), {
+  public async setName(name: string): Promise<boolean> {
+    return new Promise((res) => {
+      this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getId()), {
         description: {
           name: name,
         },
@@ -105,7 +109,7 @@ class Realm {
           texturePacksRequired: true,
         },
       }, (_result, error) => {
-        if (error) return rej(error)
+        if (error) return res(false)
           
         return res(true)
       })
@@ -117,9 +121,9 @@ class Realm {
    * @returns Port and IP Address
    */
   public async getAddress(): Promise<RealmAddress> {
-    return new Promise((res, rej) => {
-      this.client.requests.createGetRequest<RealmJoinInfo>(Endpoints.GET.RealmJoinInfo(this.getRealmId()), (result, error) => {
-        if (error) return rej(error)
+    return new Promise((res) => {
+      this.client.requests.createGetRequest<RealmJoinInfo>(Endpoints.GET.RealmJoinInfo(this.getId()), (result, error) => {
+        if (error) return res(undefined)
         const address = result.address.split(':')[0]
         const port = parseInt(result.address.split(':')[1])
         
@@ -127,6 +131,27 @@ class Realm {
           address,
           port,
         })
+      })
+    })
+  }
+
+  public getDescription(): string {
+    return this.IRealm.motd
+  }
+
+  public async setDescription(description: string): Promise<boolean> {
+    return new Promise((res) => {
+      this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getId()), {
+        description: {
+          description: description,
+        },
+        options: {
+          texturePacksRequired: true,
+        },
+      }, (_result, error) => {
+        if (error) return res(false)
+          
+        return res(true)
       })
     })
   }
