@@ -1,6 +1,6 @@
 // Type imports.
 import type { Client } from '../index'
-import type { IRealm } from '../types'
+import type { IRealm, RealmState } from '../types'
 
 class Realm {
   protected readonly client: Client
@@ -41,6 +41,14 @@ class Realm {
    */
   public getOwnerXuid(): string {
     return this.IRealm.ownerUUID
+  }
+
+  /**
+   * Gets the state of the realm.
+   * @returns OPEN or CLOSED
+   */
+  public getState(): RealmState {
+    return this.IRealm.state
   }
 }
 

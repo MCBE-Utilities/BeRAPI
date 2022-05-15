@@ -1,3 +1,6 @@
+// Type imports.
+import type { RealmState } from './Realm'
+
 export interface ServersJSON {
   servers: IRealm[]
 }
@@ -10,7 +13,7 @@ export interface IRealm {
   name: string
   motd: string
   defaultPermission: string
-  state: string
+  state: RealmState
   daysLeft: number
   expired: boolean
   expiredTrial: boolean
