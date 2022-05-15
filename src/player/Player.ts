@@ -29,6 +29,22 @@ class Player {
   public getXuid(): string {
     return this.IPlayer.uuid
   }
+
+  /**
+   * Checks if the player is a operator.
+   * @returns Boolean.
+   */
+  public isOperator(): boolean {
+    return this.IPlayer.operator
+  }
+
+  /**
+   * Checks if the player is online.
+   * @returns Boolean.
+   */
+  public isOnline(): boolean {
+    return this.IPlayer.online
+  }
 }
 
 export {
