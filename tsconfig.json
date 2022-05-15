@@ -4,7 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
-    "declaration": false,
+    "declaration": true,
     "removeComments": false,
     "esModuleInterop": true,
     "experimentalDecorators": true,
