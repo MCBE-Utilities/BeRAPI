@@ -1,6 +1,6 @@
 // Type imports.
 import type { Client } from '../index'
-import type { IRealm, RealmState } from '../types'
+import type { IRealm, RealmState, RealmJoinInfo, RealmAddress } from '../types'
 
 // Regular imports.
 import { Endpoints } from '../Constants'
@@ -108,6 +108,25 @@ class Realm {
         if (error) return rej(error)
           
         return res(true)
+      })
+    })
+  }
+
+  /**
+   * Get the realms port and ip address.
+   * @returns Port and IP Address
+   */
+  public async getAddress(): Promise<RealmAddress> {
+    return new Promise((res, rej) => {
+      this.client.requests.createGetRequest<RealmJoinInfo>(Endpoints.GET.RealmJoinInfo(this.getRealmId()), (result, error) => {
+        if (error) return rej(error)
+        const address = result.address.split(':')[0]
+        const port = parseInt(result.address.split(':')[1])
+        
+        return res({
+          address,
+          port,
+        })
       })
     })
   }
