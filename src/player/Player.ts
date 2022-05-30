@@ -75,6 +75,17 @@ class Player {
   }
 
   /**
+   * Gets the players gamer picture url path.
+   * @returns Gamer picture.
+   */
+  public async getGamerPicture(): Promise<string> {
+    if (this.cache.has('GameDisplayPicRaw')) return this.cache.get('GameDisplayPicRaw')
+    await this.fetchSettings()
+
+    return this.cache.get('GameDisplayPicRaw')
+  }
+
+  /**
    * Gets and sets all player info into cache.
    * @returns 
    */
