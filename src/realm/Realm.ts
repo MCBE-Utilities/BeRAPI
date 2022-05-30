@@ -4,15 +4,18 @@ import type { IRealm, RealmState, RealmJoinInfo, RealmAddress } from '../types'
 
 // Regular imports.
 import { Endpoints } from '../Constants'
-import { Player } from '../player'
+import { PlayerManager } from '../player'
 
 class Realm {
   protected readonly client: Client
   protected readonly IRealm: IRealm
 
+  public readonly players: PlayerManager
+
   public constructor (client: Client, IRealm: IRealm) {
     this.client = client
     this.IRealm = IRealm
+    this.players = new PlayerManager(this.client, this)
   }
 
   /**
@@ -162,21 +165,6 @@ class Realm {
         if (error) return res(false)
           
         return res(true)
-      })
-    })
-  }
-
-  /**
-   * Get the players of the realm.
-   * @returns Array of players.
-   */
-  public async getPlayers(): Promise<Player[] | undefined> {
-    return new Promise((res) => {
-      this.client.requests.createGetRequest<IRealm>(Endpoints.GET.Realm(this.getId()), (result, error) => {
-        if (error) return res(undefined)
-        const players = result.players.map((x) => new Player(this.client, this, x))
-
-        return res(players)
       })
     })
   }

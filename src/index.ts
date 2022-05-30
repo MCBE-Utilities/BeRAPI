@@ -1,38 +1,30 @@
 // Work in progress.
 
+// Exports
 export * from './Constants'
+export * from './utils'
+
+// Type imports.
+import type { BeAuth } from '@mcbeutils/beauth'
 
 // Regular imports.
 import { RequestManager } from './requests'
 import { RealmManager } from './realm'
 
 class Client {
-  protected readonly xuid: string
-  protected readonly xsts: string
-  protected readonly hash: string
+  protected readonly auth: BeAuth
   public readonly requests: RequestManager
   public readonly realms: RealmManager
 
-  public constructor(xuid: string, xsts: string, hash: string) {
-    this.xuid = xuid
-    this.xsts = xsts
-    this.hash = hash
+  public constructor(auth: BeAuth) {
+    this.auth = auth
     this.requests = new RequestManager(this)
     this.realms = new RealmManager(this)
   }
 
-  public getXuid(): string {
-    return this.xuid
+  public getAuth(): BeAuth {
+    return this.auth
   }
-
-  public getXsts(): string {
-    return this.xsts
-  }
-
-  public getHash(): string {
-    return this.hash
-  }
-
 }
 
 export {
