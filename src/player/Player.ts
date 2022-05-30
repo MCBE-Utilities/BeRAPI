@@ -75,7 +75,7 @@ class Player {
   }
 
   /**
-   * Gets the players gamer picture url path.
+   * Gets the player's gamer picture url path.
    * @returns Gamer picture.
    */
   public async getGamerPicture(): Promise<string> {
@@ -83,6 +83,17 @@ class Player {
     await this.fetchSettings()
 
     return this.cache.get('GameDisplayPicRaw')
+  }
+
+  /**
+   * Get the player's account tier.
+   * @returns Gold / Silver
+   */
+  public async getAccountTier(): Promise<string> {
+    if (this.cache.has('AccountTier')) return this.cache.get('AccountTier')
+    await this.fetchSettings()
+
+    return this.cache.get('AccountTier')
   }
 
   /**
