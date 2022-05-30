@@ -72,7 +72,7 @@ class Realm {
    */
   public async close(): Promise<boolean> {
     return new Promise((res) => {
-      this.client.requests.createPutRequest(Endpoints.PUT.RealmClose(this.getId()), (_result, error) => {
+      this.client.requests.createPutRequest(Endpoints.REALMS.PUT.RealmClose(this.getId()), (_result, error) => {
         if (error) return res(false)
         
         return res(true)
@@ -86,7 +86,7 @@ class Realm {
    */
     public async open(): Promise<boolean> {
       return new Promise((res) => {
-        this.client.requests.createPutRequest(Endpoints.PUT.RealmOpen(this.getId()), (_result, error) => {
+        this.client.requests.createPutRequest(Endpoints.REALMS.PUT.RealmOpen(this.getId()), (_result, error) => {
           if (error) return res(false)
           
           return res(true)
@@ -105,7 +105,7 @@ class Realm {
    */
   public async setName(name: string): Promise<boolean> {
     return new Promise((res) => {
-      this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getId()), {
+      this.client.requests.createPostRequest(Endpoints.REALMS.POST.RealmConfiguration(this.getId()), {
         description: {
           name: name,
         },
@@ -126,7 +126,7 @@ class Realm {
    */
   public async getAddress(): Promise<RealmAddress> {
     return new Promise((res) => {
-      this.client.requests.createGetRequest<RealmJoinInfo>(Endpoints.GET.RealmJoinInfo(this.getId()), (result, error) => {
+      this.client.requests.createGetRequest<RealmJoinInfo>(Endpoints.REALMS.GET.RealmJoinInfo(this.getId()), (result, error) => {
         if (error) return res(undefined)
         const address = result.address.split(':')[0]
         const port = parseInt(result.address.split(':')[1])
@@ -154,7 +154,7 @@ class Realm {
    */
   public async setDescription(description: string): Promise<boolean> {
     return new Promise((res) => {
-      this.client.requests.createPostRequest(Endpoints.POST.RealmConfiguration(this.getId()), {
+      this.client.requests.createPostRequest(Endpoints.REALMS.POST.RealmConfiguration(this.getId()), {
         description: {
           description: description,
         },

@@ -1,7 +1,7 @@
 // Type import.
 import type { Client } from '../index'
 import type { Realm } from '../realm'
-import type { IRealm } from '../types'
+import type { IRealm, ProfileUsers} from '../types'
 
 // Regular imports.
 import { Endpoints } from '../Constants'
@@ -17,35 +17,77 @@ class PlayerManager {
     this.realm = realm
   }
 
-  public async getOnlinePlayers(): Promise<Player[] | undefined> {
+  /**
+   * Gets all members of the realm.
+   * @returns Array of players.
+   */
+  public async getAll(): Promise<Player[] | undefined> {
     return new Promise((res) => {
-      this.client.requests.createGetRequest<IRealm>(Endpoints.GET.Realm(this.realm.getId()), (result, error) => {
+      this.client.requests.createGetRequest<IRealm>(Endpoints.REALMS.GET.Realm(this.realm.getId()), (result, error) => {
         if (error) return res(undefined)
-        const iplayers = result.players.filter((x) => x.online === true)
+        const iplayers = result.players
         for (const iplayer of iplayers) {
           if (this.cache.has(iplayer.uuid)) continue
           const player = new Player(this.client, this.realm, iplayer)
           this.cache.set(iplayer.uuid, player)
         }
 
-        return res(Array.from(this.cache.values()).filter((x) => x.isOnline() === true))
+        return res(Array.from(this.cache.values()))
       })
     })
   }
 
-  public async getOfflinePlayers(): Promise<Player[] | undefined> {
-    return new Promise((res) => {
-      this.client.requests.createGetRequest<IRealm>(Endpoints.GET.Realm(this.realm.getId()), (result, error) => {
-        if (error) return res(undefined)
-        const iplayers = result.players.filter((x) => x.online === false)
-        for (const iplayer of iplayers) {
-          if (this.cache.has(iplayer.uuid)) continue
-          const player = new Player(this.client, this.realm, iplayer)
-          this.cache.set(iplayer.uuid, player)
-        }
+  /**
+   * Gets all players that are currently on the realm.
+   * @returns Array of players.
+   */
+  public async getAllOnline(): Promise<Player[] | undefined> {
+    const players = await this.getAll()
 
-        return res(Array.from(this.cache.values()).filter((x) => x.isOnline() === false))
-      })
+    return players.filter((x) => x.isOnline() === true)
+  }
+
+  /**
+   * Gets all players that are not currently on the realm.
+   * @returns Array of players.
+   */
+  public async getAllOffline(): Promise<Player[] | undefined> {
+    const players = await this.getAll()
+
+    return players.filter((x) => x.isOnline() === false)
+  }
+
+  /**
+   * Gets a player by their xuid.
+   * @param {string} xuid Xuid. 
+   * @returns Player.
+   */
+  public async getByXuid(xuid: string): Promise<Player | undefined> {
+    const players = await this.getAll()
+    const player = players.find((x) => x.getXuid() === xuid)
+
+    return player
+  }
+
+  /**
+   * Gets a player by their name.
+   * @param {string} name Player's name.
+   * @returns Player. 
+   */
+  public async getByName(name: string): Promise<Player | undefined> {
+    return new Promise((res) => {
+      this.client.requests.createGetRequest<ProfileUsers>(
+        Endpoints.XBOX.GET.XuidResolve(name),
+        async (result, error) => {
+          if (error) return res(undefined)
+          const player = await this.getByXuid(result.profileUsers[0].id)
+          if (!player) return res(undefined)
+
+          return res(player)
+        },
+        this.client.getAuth().getDefaultChain().xsts_token,
+        this.client.getAuth().getDefaultChain().user_hash,
+      )
     })
   }
 }

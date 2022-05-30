@@ -19,7 +19,7 @@ class RealmManager {
    */
   public async getAll(): Promise<Realm[] | undefined> {
     return new Promise((res) => {
-      this.client.requests.createGetRequest<ServersJSON>(Endpoints.GET.Realms, (result, error) => {
+      this.client.requests.createGetRequest<ServersJSON>(Endpoints.REALMS.GET.Realms, (result, error) => {
         if (error) return res(undefined)
         const realms = result.servers.map((x) => new Realm(this.client, x))
   
@@ -61,7 +61,7 @@ class RealmManager {
    */
   public getByInviteCode(code: string): Promise<Realm | undefined> {
     return new Promise((res) => {
-      this.client.requests.createGetRequest<IRealm>(Endpoints.GET.RealmByInvite(code), (result, error) => {
+      this.client.requests.createGetRequest<IRealm>(Endpoints.REALMS.GET.RealmByInvite(code), (result, error) => {
         if (error) return res(undefined)
         const realm = new Realm(this.client, result)
 

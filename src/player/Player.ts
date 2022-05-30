@@ -4,7 +4,7 @@ import type { Client } from '../index'
 import type { Realm } from '../realm'
 
 // Regular imports.
-import { settingsUrl } from '../Constants'
+import { Endpoints } from '../Constants'
 
 class Player {
   protected readonly client: Client
@@ -105,7 +105,7 @@ class Player {
   private async fetchSettings(): Promise<void> {
     return new Promise(async (res) => {
       await this.client.requests.createGetRequest<ProfileUsers>(
-        settingsUrl(this.getXuid()),
+        Endpoints.XBOX.GET.UserSettings(this.getXuid()),
         (result, error) => {
           if (error) return new Error(`${result}`)
   
