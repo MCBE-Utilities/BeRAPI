@@ -21,7 +21,6 @@
   "license": "MIT",
   "dependencies": {
     "@mcbeutils/beauth": "^1.1.0",
-    "@xboxreplay/xboxlive-api": "^3.4.3",
     "axios": "^0.27.2",
     "beauth": "file:../BeAuth",
     "cross-env": "^7.0.3",

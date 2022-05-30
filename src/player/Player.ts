@@ -4,7 +4,7 @@ import type { Client } from '../index'
 import type { Realm } from '../realm'
 
 // Regular imports.
-import { getPlayerSettings } from '@xboxreplay/xboxlive-api'
+import { settingsUrl } from '../Constants'
 
 class Player {
   protected readonly client: Client
@@ -96,6 +96,8 @@ class Player {
     return this.cache.get('AccountTier')
   }
 
+  // TODO: add other methods.
+
   /**
    * Gets and sets all player info into cache.
    * @returns 
@@ -103,7 +105,7 @@ class Player {
   private async fetchSettings(): Promise<void> {
     return new Promise(async (res) => {
       await this.client.requests.createGetRequest<ProfileUsers>(
-        `https://profile.xboxlive.com/users/xuid(${this.getXuid()})/settings`,
+        settingsUrl(this.getXuid()),
         (result, error) => {
           if (error) return new Error(`${result}`)
   

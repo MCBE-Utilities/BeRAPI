@@ -3,6 +3,8 @@ export const MCBE_PROTOCOL = 503
 
 export const RealmAPI = 'https://pocket.realms.minecraft.net/'
 
+export const settingsUrl = (xuid): string => `https://profile.xboxlive.com/users/xuid(${xuid})/settings`
+
 export const Endpoints = {
   GET: {
     UserCompatible: RealmAPI + "mco/client/compatible",
