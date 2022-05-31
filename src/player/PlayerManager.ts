@@ -90,6 +90,33 @@ class PlayerManager {
       )
     })
   }
+
+  /**
+   * Gets the owner of the realm.
+   * @returns Owners name and xuid.
+   */
+  public async getOwner(): Promise<{name: string, xuid: string}> {
+    return new Promise(async (res) => {
+      await this.client.requests.createGetRequest<ProfileUsers>(
+        Endpoints.XBOX.GET.UserSettings(this.realm.getOwnerXuid()),
+        (result, error) => {
+          if (error) return new Error(`${result}`)
+          const xuid = result.profileUsers[0].id
+          const name = result.profileUsers[0].settings[0].value
+
+          return res({
+            xuid,
+            name,
+          })
+        },
+        this.client.getAuth().getDefaultChain().xsts_token,
+        this.client.getAuth().getDefaultChain().user_hash,
+        {
+          settings: 'Gamertag,Gamerscore,GameDisplayPicRaw,AccountTier,XboxOneRep,PreferredColor,RealName,Bio,IsQuarantined'
+        }
+      )
+    })
+  }
 }
 
 export {
