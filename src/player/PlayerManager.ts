@@ -98,7 +98,7 @@ class PlayerManager {
   public async getOwner(): Promise<{name: string, xuid: string}> {
     return new Promise(async (res) => {
       await this.client.requests.createGetRequest<ProfileUsers>(
-        Endpoints.XBOX.GET.UserSettings(this.realm.getOwnerXuid()),
+        Endpoints.XBOX.GET.UserSettings(this.realm.getIRealm().ownerUUID),
         (result, error) => {
           if (error) return new Error(`${result}`)
           const xuid = result.profileUsers[0].id

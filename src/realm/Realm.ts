@@ -43,14 +43,6 @@ class Realm {
   }
 
   /**
-   * Get the owner of the realm.
-   * @returns Player xuid.
-   */
-  public getOwnerXuid(): string {
-    return this.IRealm.ownerUUID
-  }
-
-  /**
    * Gets the state of the realm.
    * @returns OPEN or CLOSED
    */

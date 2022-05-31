@@ -48,7 +48,7 @@ class RealmManager {
    */
   public async getByOwnerXuid(xuid: string): Promise<Realm[] | undefined> {
     const realms = await this.getAll()
-    const found = realms.filter((x) => x.getOwnerXuid() === xuid)
+    const found = realms.filter((x) => x.getIRealm().ownerUUID === xuid)
     if (!found) return
 
     return found
