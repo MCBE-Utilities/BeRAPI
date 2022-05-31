@@ -45,8 +45,8 @@ export const Endpoints = {
   },
   XBOX: {
     GET: {
-      UserSettings: (xuid: string): string => XboxAPI + `users/xuid(${xuid})/settings`,
-      XuidResolve: (name: string): string => XboxAPI + `users/gt(${name})/settings`
+      UserSettingsByXuid: (xuid: string): string => XboxAPI + `users/xuid(${xuid})/settings`,
+      UserSettingsByName: (name: string): string => XboxAPI + `users/gt(${name})/settings`
     }
   }
 }

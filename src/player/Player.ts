@@ -105,7 +105,7 @@ class Player {
   private async fetchSettings(): Promise<void> {
     return new Promise(async (res) => {
       await this.client.requests.createGetRequest<ProfileUsers>(
-        Endpoints.XBOX.GET.UserSettings(this.getXuid()),
+        Endpoints.XBOX.GET.UserSettingsByXuid(this.getXuid()),
         (result, error) => {
           if (error) return new Error(`${result}`)
   

@@ -77,7 +77,7 @@ class PlayerManager {
   public async getByName(name: string): Promise<Player | undefined> {
     return new Promise((res) => {
       this.client.requests.createGetRequest<ProfileUsers>(
-        Endpoints.XBOX.GET.XuidResolve(name),
+        Endpoints.XBOX.GET.UserSettingsByName(name),
         async (result, error) => {
           if (error) return res(undefined)
           const player = await this.getByXuid(result.profileUsers[0].id)
@@ -98,7 +98,7 @@ class PlayerManager {
   public async getOwner(): Promise<{name: string, xuid: string}> {
     return new Promise(async (res) => {
       await this.client.requests.createGetRequest<ProfileUsers>(
-        Endpoints.XBOX.GET.UserSettings(this.realm.getIRealm().ownerUUID),
+        Endpoints.XBOX.GET.UserSettingsByXuid(this.realm.getIRealm().ownerUUID),
         (result, error) => {
           if (error) return new Error(`${result}`)
           const xuid = result.profileUsers[0].id
