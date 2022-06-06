@@ -33,6 +33,16 @@ class RequestManager {
     })
   }
 
+  public createDeleteRequest<K>(endpoint: string, callback: (result: K, error: boolean) => void, xsts?: string, hash?: string): void {
+    axios.delete(endpoint, {
+      headers: createHeader(xsts ?? this.client.getAuth().getXsts(), hash ?? this.client.getAuth().getHash())
+    }).then((result) => {
+      return callback(result.data, false)
+    }).catch((reason) => {
+      return callback(reason, true)
+    })
+  }
+
   public createPostRequest<K>(endpoint: string, body: any, callback: (result: K, error: boolean) => void, xsts?: string, hash?: string): void {
     axios.post(endpoint, body, {
       headers: createHeader(xsts ?? this.client.getAuth().getXsts(), hash ?? this.client.getAuth().getHash()),
