@@ -182,6 +182,7 @@ class Realm {
   /**
    * Adds a player to the banlist.
    * @param {Player | Banned | string} player 
+   * @returns boolean
    */
   public async banPlayer(player: Player | Banned | string): Promise<boolean> {
     return new Promise((res) => {
@@ -199,6 +200,35 @@ class Realm {
         this.client.requests.createPostRequest(
           Endpoints.REALMS.POST.RealmBlockPlayer(this.getId(), player),
           {},
+          (_result, error) => {
+            if (error) return res(false)
+  
+            return res(true)
+          }
+        )
+      }
+    })
+  }
+
+  /**
+   * Remove a player from the ban list.
+   * @param {Player | Banned | string} player 
+   * @returns boolean
+   */
+  public unbanPlayer(player: Player | Banned | string): Promise<boolean> {
+    return new Promise((res) => {
+      if (player instanceof Player || player instanceof Banned) {
+        this.client.requests.createDeleteRequest(
+          Endpoints.REALMS.DELETE.RealmBlockedPlayer(this.getId(), player.getXuid()),
+          (_result, error) => {
+            if (error) return res(false)
+  
+            return res(true)
+          }
+        )
+      } else {
+        this.client.requests.createDeleteRequest(
+          Endpoints.REALMS.DELETE.RealmBlockedPlayer(this.getId(), player),
           (_result, error) => {
             if (error) return res(false)
   
