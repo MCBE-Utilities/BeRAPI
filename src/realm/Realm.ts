@@ -4,7 +4,7 @@ import type { IRealm, RealmState, RealmJoinInfo, RealmAddress } from '../types'
 
 // Regular imports.
 import { Endpoints } from '../Constants'
-import { PlayerManager } from '../player'
+import { Banned, Player, PlayerManager } from '../player'
 
 class Realm {
   protected readonly client: Client
@@ -158,6 +158,54 @@ class Realm {
           
         return res(true)
       })
+    })
+  }
+
+  /**
+   * Gets all banned players on the realm.
+   * @returns Banned players.
+   */
+  public async getBanList(): Promise<Banned[] | undefined> {
+    return new Promise((res) => {
+      this.client.requests.createGetRequest<string[]>(
+        Endpoints.REALMS.GET.RealmBlockedPlayers(this.getId()),
+        async (result, error) => {
+          if (error) return res(undefined)
+          const banlist = result.map((x) => new Banned(this.client, this, x))
+
+          return res(banlist)
+        }
+      )
+    })
+  }
+
+  /**
+   * Adds a player to the banlist.
+   * @param {Player | Banned | string} player 
+   */
+  public async banPlayer(player: Player | Banned | string): Promise<boolean> {
+    return new Promise((res) => {
+      if (player instanceof Player || player instanceof Banned) {
+        this.client.requests.createPostRequest(
+          Endpoints.REALMS.POST.RealmBlockPlayer(this.getId(), player.getXuid()),
+          {},
+          (_result, error) => {
+            if (error) return res(false)
+  
+            return res(true)
+          }
+        )
+      } else {
+        this.client.requests.createPostRequest(
+          Endpoints.REALMS.POST.RealmBlockPlayer(this.getId(), player),
+          {},
+          (_result, error) => {
+            if (error) return res(false)
+  
+            return res(true)
+          }
+        )
+      }
     })
   }
 }
