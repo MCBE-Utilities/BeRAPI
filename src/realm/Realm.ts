@@ -59,6 +59,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Closes the realm.
    * @returns True or False.
    */
@@ -73,6 +74,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Opens the realm.
    * @returns True or False.
    */
@@ -91,6 +93,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Set the name of the realm.
    * @param {string} name New name for the realm.
    * @returns True or False.
@@ -140,6 +143,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Set the description of the realm.
    * @param {string} description Realm description.
    * @returns True or False.
@@ -162,6 +166,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Gets all banned players on the realm.
    * @returns Banned players.
    */
@@ -180,6 +185,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Adds a player to the banlist.
    * @param {Player | Banned | string} player 
    * @returns boolean
@@ -211,6 +217,7 @@ class Realm {
   }
 
   /**
+   * NOTE: Must be owner of realm to use.
    * Remove a player from the ban list.
    * @param {Player | Banned | string} player 
    * @returns boolean
